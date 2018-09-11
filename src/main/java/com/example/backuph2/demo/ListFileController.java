@@ -27,7 +27,7 @@ public class ListFileController {
     @Value("${app_data}")
     String appData;
 
-    @GetMapping("list-files")
+    @GetMapping("/api/list-files")
     public List<Path> listFiles(@RequestParam String filePath) {
 
         // GET http://localhost:8080/list-files?filePath=d%3A%2Ftemp
@@ -40,7 +40,7 @@ public class ListFileController {
     }
 
 
-    @GetMapping(value = "/download")
+    @GetMapping(value = "/api/download")
     public ResponseEntity<?> backup(@RequestParam String filePath) throws Exception {
 
         // GET http://localhost:8080/download?filePath=d%3A%5Ctemp%5C2.txt
@@ -51,7 +51,7 @@ public class ListFileController {
                 .body(bytes);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/api/upload")
     public List<Path> uploadFiles(@RequestParam MultipartFile file) throws IOException {
 
         // note: please do not specify the content-type in the request header to avoid exception.
