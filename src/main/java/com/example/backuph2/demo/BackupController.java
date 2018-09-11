@@ -37,7 +37,6 @@ public class BackupController {
     @GetMapping(value = "/backup")
     public ResponseEntity<?> backup(HttpServletResponse resp) throws Exception {
 
-
         StringBuilder sb = new StringBuilder();
 
         try (Connection connection = dataSource.getConnection()) {
@@ -48,15 +47,15 @@ public class BackupController {
             }
         }
 
-        String dataString = sb.toString();
-        byte[] generateZip = generateZip(dataString.getBytes());
+        byte[] generateZip = generateZip(sb.toString().getBytes());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.set("Content-Disposition", "attachment; filename=backup" + LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".zip");
-        headers.setContentLength(generateZip.length);
-        return new ResponseEntity<>(generateZip, headers, HttpStatus.OK);
-
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=backup" +
+                                LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE) + ".zip")
+                .contentLength(generateZip.length)
+                .body(generateZip);
 
     }
 
